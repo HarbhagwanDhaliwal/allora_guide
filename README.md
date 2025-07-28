@@ -61,6 +61,30 @@ allorad tx emissions create-topic \
   --chain-id allora-testnet-1 \
   --fees 2000000uallo
 ```
+### Sample Topic Creation Command
+```bash
+allorad tx emissions create-topic \
+YOUR_WALLET_ADDRESS \
+"ETH Price Prediction in 24 hours" \
+"mse" \
+3600 \
+0 \
+3 \
+3 \
+1 \
+true \
+0.001 \
+0.1 \
+0.25 \
+0.25 \
+0.25 \
+true \
+true \
+--from YOUR_WALLET_NAME \
+--node https://rpc.ankr.com/allora_testnet \
+--chain-id allora-testnet-1 \
+--fees 2000000uallo \
+```
 
 ### Key Parameters Explained
 | Parameter | Example Value | Purpose |

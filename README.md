@@ -13,6 +13,7 @@ Welcome! This guide helps you set up your environment and create a **Topic** on 
 Once Allora goes **permissionless** on mainnet, you'll be able to create topics freely.
 
 ---
+````
 
 ## 🚀 Install Allora CLI (v0.12.1)
 
@@ -25,7 +26,7 @@ echo 'export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin' >> $HOME/.bash_profile
 echo 'export PATH=$PATH:$(go env GOPATH)/bin' >> $HOME/.bash_profile
 source $HOME/.bash_profile
 go version
-````
+
 
 ### 2. Install Allora CLI
 

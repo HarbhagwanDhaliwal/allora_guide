@@ -1,24 +1,17 @@
-````markdown
 # 🧠 Allora Topic Creation Guide
 
-Welcome! This guide helps you set up your environment and create a **Topic** on the Allora Network using the latest CLI tools.
+Welcome to the Allora Network! This guide walks you through setting up your environment and creating a **Topic** using the latest CLI tools.
 
-> ⚠️ **Note:** Topic creation is currently **permissioned** on testnet.  
-> You'll see this error if not whitelisted:
->
-> ```
-> failed to execute message; message index: 0: not permitted to create topic
-> ```
-
-Once Allora goes **permissionless** on mainnet, you'll be able to create topics freely.
+> ⚠️ **Current Limitations:**  
+> Topic creation is **permissioned** during testnet phase. If not whitelisted, you'll encounter:  
+> `failed to execute message; message index: 0: not permitted to create topic`  
+> This restriction will be lifted when Allora goes **permissionless** on mainnet.
 
 ---
-````
 
-## 🚀 Install Allora CLI (v0.12.1)
+## 🛠️ Installation Guide
 
 ### 1. Install Go (v1.22.4)
-
 ```bash
 sudo rm -rf /usr/local/go
 curl -L https://go.dev/dl/go1.22.4.linux-amd64.tar.gz | sudo tar -xzf - -C /usr/local
@@ -26,10 +19,9 @@ echo 'export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin' >> $HOME/.bash_profile
 echo 'export PATH=$PATH:$(go env GOPATH)/bin' >> $HOME/.bash_profile
 source $HOME/.bash_profile
 go version
+```
 
-
-### 2. Install Allora CLI
-
+### 2. Install Allora CLI (v0.12.1)
 ```bash
 git clone https://github.com/allora-network/allora-chain.git
 cd allora-chain
@@ -40,165 +32,95 @@ allorad version
 
 ---
 
-## 🔐 Wallet Setup
+## 🔐 Wallet Management
 
-### Create a New Wallet
+| Command | Description |
+|---------|-------------|
+| `allorad keys add mywallet` | Create new wallet |
+| `allorad keys add mywallet --recover` | Recover existing wallet |
+| `allorad keys list` | View all wallets |
 
-```bash
-allorad keys add mywallet
-```
-
-### Recover an Existing Wallet
-
-```bash
-allorad keys add mywallet --recover
-```
-
-### List All Wallets
-
-```bash
-allorad keys list
-```
+**Get Testnet Tokens:**  
+👉 [Allora Testnet Faucet](https://faucet.testnet.allora.network/)
 
 ---
 
-## 💧 Request Testnet Tokens
+## 🚀 Topic Creation (Post-Permissionless)
 
-Visit the faucet and enter your wallet address to get testnet tokens:
-👉 [https://faucet.testnet.allora.network/](https://faucet.testnet.allora.network/)
-
----
-
-## 📌 Create a Topic (Once Permissionless)
-
-### Sample Command
-
+### Basic Command Structure
 ```bash
 allorad tx emissions create-topic \
-YOUR_WALLET_ADDRESS \
-"ETH Price Prediction in 24 hours" \
-"mse" \
-3600 \
-0 \
-3 \
-3 \
-1 \
-true \
-0.001 \
-0.1 \
-0.25 \
-0.25 \
-0.25 \
-true \
-true \
---from YOUR_WALLET_NAME \
---node https://rpc.ankr.com/allora_testnet \
---chain-id allora-testnet-1 \
---fees 2000000uallo
+  [creator_address] \
+  "[topic_description]" \
+  [loss_method] \
+  [epoch_length] \
+  [ground_truth_lag] \
+  [parameters...] \
+  --from [your_wallet] \
+  --node https://rpc.ankr.com/allora_testnet \
+  --chain-id allora-testnet-1 \
+  --fees 2000000uallo
 ```
 
-### Parameters
-
-```text
-[creator]                    Your wallet address
-[metadata]                   Topic name/description
-[loss_method]                e.g. "mse"
-[epoch_length]               In seconds
-[ground_truth_lag]           Delay for verifying truth
-[worker_submission_window]   Window size for worker
-[p_norm]                     Prediction norm
-[alpha_regret]               Used in sorting reputers
-[allow_negative]             true/false
-[epsilon]                    Exploration factor
-[merit_sortition_alpha]      Merit sorting weight
-[active_inferer_quantile]    Inferer threshold
-[active_forecaster_quantile] Forecaster threshold
-[active_reputer_quantile]    Reputer threshold
-[enable_worker_whitelist]    true/false
-[enable_reputer_whitelist]   true/false
-```
+### Key Parameters Explained
+| Parameter | Example Value | Purpose |
+|-----------|---------------|---------|
+| `metadata` | "ETH Price Prediction" | Human-readable description |
+| `loss_method` | "mse" | Mean Squared Error metric |
+| `epoch_length` | 3600 | Epoch duration in seconds |
+| `p_norm` | 3 | Prediction norm value |
+| `epsilon` | 0.001 | Exploration factor |
 
 ---
 
-## 💸 Fund Your Topic
-
-Once the topic is created, fund it so that workers can be paid for inferences:
-
+## 💰 Funding Your Topic
 ```bash
 allorad tx emissions fund-topic \
-YOUR_WALLET_ADDRESS \
-TOPIC_ID \
-1000000uallo \
-"inference funds" \
---from YOUR_WALLET_NAME \
---node https://rpc.ankr.com/allora_testnet \
---chain-id allora-testnet-1 \
---fees 200000uallo
+  [your_address] \
+  [topic_id] \
+  1000000uallo \
+  "inference funds" \
+  --from [your_wallet] \
+  --node https://rpc.ankr.com/allora_testnet \
+  --chain-id allora-testnet-1 \
+  --fees 200000uallo
 ```
 
 ---
 
-## ✅ Whitelist Workers and Reputers
+## 📝 Whitelist Management
 
-If your topic uses **whitelists**, you need to manually add the allowed addresses.
-
-### Add a Worker
-
+### Add Worker
 ```bash
 allorad tx emissions add-to-topic-worker-whitelist \
-YOUR_WALLET_ADDRESS \
-WORKER_ADDRESS \
-TOPIC_ID \
---from YOUR_WALLET_NAME \
---node https://rpc.ankr.com/allora_testnet \
---chain-id allora-testnet-1 \
---fees 200000uallo
+  [your_address] \
+  [worker_address] \
+  [topic_id] \
+  [standard_flags...]
 ```
 
-### Add a Reputer
-
+### Add Reputer
 ```bash
 allorad tx emissions add-to-topic-reputer-whitelist \
-YOUR_WALLET_ADDRESS \
-REPUTER_ADDRESS \
-TOPIC_ID \
---from YOUR_WALLET_NAME \
---node https://rpc.ankr.com/allora_testnet \
---chain-id allora-testnet-1 \
---fees 200000uallo
+  [your_address] \
+  [reputer_address] \
+  [topic_id] \
+  [standard_flags...]
 ```
 
 ---
 
-## 🧪 Try Other Useful Commands
-
-Here are a couple of handy commands you can explore:
-
-* **Register a worker or reputer:**
+## 🔍 Useful Commands Cheat Sheet
 
 ```bash
-allorad tx emissions register ...
-```
+# Register participant
+allorad tx emissions register [participant_type] [address] [topic_id]
 
-* **Delegate stake to a reputer:**
+# Delegate stake
+allorad tx emissions delegate-stake [delegator] [reputer] [amount]
 
-```bash
-allorad tx emissions delegate-stake ...
-```
-
-Explore more using:
-
-```bash
+# Get help
 allorad tx emissions -h
 ```
 
 ---
-
-## 📣 Final Words
-
-You're now fully equipped to launch and manage your own topic on the Allora network. Stay tuned for the mainnet launch when topic creation becomes permissionless!
-
-```
-
----
-

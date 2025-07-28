@@ -45,7 +45,7 @@ allorad version
 
 ---
 
-## 🚀 Topic Creation (Post-Permissionless)
+## 🚀 Topic Creation 
 
 ### Basic Command Structure
 ```bash

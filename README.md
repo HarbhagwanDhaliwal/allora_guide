@@ -1,13 +1,16 @@
+````markdown
 # 🧠 Allora Topic Creation Guide
 
-Welcome! This repository walks you through setting up your environment and preparing to create a **Topic** on the Allora Network. It also includes a reference for using the topic creation command.
+Welcome! This guide helps you set up your environment and create a **Topic** on the Allora Network using the latest CLI tools.
 
-> ⚠️ **Important:** Topic creation is currently **permissioned** on the testnet and will only become fully **permissionless** after mainnet launch.  
-> If you attempt to create a topic now, you may encounter:
+> ⚠️ **Note:** Topic creation is currently **permissioned** on testnet.  
+> You'll see this error if not whitelisted:
 >
 > ```
 > failed to execute message; message index: 0: not permitted to create topic
 > ```
+
+Once Allora goes **permissionless** on mainnet, you'll be able to create topics freely.
 
 ---
 
@@ -22,9 +25,9 @@ echo 'export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin' >> $HOME/.bash_profile
 echo 'export PATH=$PATH:$(go env GOPATH)/bin' >> $HOME/.bash_profile
 source $HOME/.bash_profile
 go version
-```
+````
 
-### 2. Install the Allora CLI
+### 2. Install Allora CLI
 
 ```bash
 git clone https://github.com/allora-network/allora-chain.git
@@ -41,13 +44,13 @@ allorad version
 ### Create a New Wallet
 
 ```bash
-allorad keys add testkey
+allorad keys add mywallet
 ```
 
 ### Recover an Existing Wallet
 
 ```bash
-allorad keys add <wallet_name> --recover
+allorad keys add mywallet --recover
 ```
 
 ### List All Wallets
@@ -60,19 +63,19 @@ allorad keys list
 
 ## 💧 Request Testnet Tokens
 
-Use the official faucet to request testnet tokens:  
+Visit the faucet and enter your wallet address to get testnet tokens:
 👉 [https://faucet.testnet.allora.network/](https://faucet.testnet.allora.network/)
 
 ---
 
 ## 📌 Create a Topic (Once Permissionless)
 
-### Example Command
+### Sample Command
 
 ```bash
 allorad tx emissions create-topic \
-"YOUR_WALLET_ADDRESS" \
-"ETH Price Prediction (Encrypted) in 24 hours" \
+YOUR_WALLET_ADDRESS \
+"ETH Price Prediction in 24 hours" \
 "mse" \
 3600 \
 0 \
@@ -85,40 +88,116 @@ true \
 0.25 \
 0.25 \
 0.25 \
-false \
-false \
+true \
+true \
+--from YOUR_WALLET_NAME \
 --node https://rpc.ankr.com/allora_testnet \
 --chain-id allora-testnet-1 \
 --fees 2000000uallo
 ```
 
-### Command Syntax Breakdown
+### Parameters
 
-```bash
-allorad tx emissions create-topic \
-[creator] \
-[metadata] \
-[loss_method] \
-[epoch_length] \
-[ground_truth_lag] \
-[worker_submission_window] \
-[p_norm] \
-[alpha_regret] \
-[allow_negative] \
-[epsilon] \
-[merit_sortition_alpha] \
-[active_inferer_quantile] \
-[active_forecaster_quantile] \
-[active_reputer_quantile] \
-[enable_worker_whitelist] \
-[enable_reputer_whitelist] \
-[flags...]
+```text
+[creator]                    Your wallet address
+[metadata]                   Topic name/description
+[loss_method]                e.g. "mse"
+[epoch_length]               In seconds
+[ground_truth_lag]           Delay for verifying truth
+[worker_submission_window]   Window size for worker
+[p_norm]                     Prediction norm
+[alpha_regret]               Used in sorting reputers
+[allow_negative]             true/false
+[epsilon]                    Exploration factor
+[merit_sortition_alpha]      Merit sorting weight
+[active_inferer_quantile]    Inferer threshold
+[active_forecaster_quantile] Forecaster threshold
+[active_reputer_quantile]    Reputer threshold
+[enable_worker_whitelist]    true/false
+[enable_reputer_whitelist]   true/false
 ```
 
 ---
 
-## 👋 Stay Ready for Mainnet
+## 💸 Fund Your Topic
 
-You're now ready to create your first topic as soon as Allora enables permissionless access on mainnet.  
+Once the topic is created, fund it so that workers can be paid for inferences:
+
+```bash
+allorad tx emissions fund-topic \
+YOUR_WALLET_ADDRESS \
+TOPIC_ID \
+1000000uallo \
+"inference funds" \
+--from YOUR_WALLET_NAME \
+--node https://rpc.ankr.com/allora_testnet \
+--chain-id allora-testnet-1 \
+--fees 200000uallo
+```
 
 ---
+
+## ✅ Whitelist Workers and Reputers
+
+If your topic uses **whitelists**, you need to manually add the allowed addresses.
+
+### Add a Worker
+
+```bash
+allorad tx emissions add-to-topic-worker-whitelist \
+YOUR_WALLET_ADDRESS \
+WORKER_ADDRESS \
+TOPIC_ID \
+--from YOUR_WALLET_NAME \
+--node https://rpc.ankr.com/allora_testnet \
+--chain-id allora-testnet-1 \
+--fees 200000uallo
+```
+
+### Add a Reputer
+
+```bash
+allorad tx emissions add-to-topic-reputer-whitelist \
+YOUR_WALLET_ADDRESS \
+REPUTER_ADDRESS \
+TOPIC_ID \
+--from YOUR_WALLET_NAME \
+--node https://rpc.ankr.com/allora_testnet \
+--chain-id allora-testnet-1 \
+--fees 200000uallo
+```
+
+---
+
+## 🧪 Try Other Useful Commands
+
+Here are a couple of handy commands you can explore:
+
+* **Register a worker or reputer:**
+
+```bash
+allorad tx emissions register ...
+```
+
+* **Delegate stake to a reputer:**
+
+```bash
+allorad tx emissions delegate-stake ...
+```
+
+Explore more using:
+
+```bash
+allorad tx emissions -h
+```
+
+---
+
+## 📣 Final Words
+
+You're now fully equipped to launch and manage your own topic on the Allora network. Stay tuned for the mainnet launch when topic creation becomes permissionless!
+
+```
+
+---
+
